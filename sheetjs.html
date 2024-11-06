@@ -1,0 +1,70 @@
+<html>
+
+    <head>
+        <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+        <script>
+            window.onload = ()=>{
+                document.getElementById("sheetjsexport").addEventListener('click', function() {
+                    /* Create worksheet from HTML DOM TABLE */
+                    var wb = XLSX.utils.table_to_book(document.getElementById("TableToExport"));
+                    /* Export to file (start a download) */
+                    XLSX.writeFile(wb, "SheetJSTable.xlsx");
+                });
+
+
+                
+
+                
+            }
+
+            function legend(event){
+                let reader = new FileReader();
+                //reader.readAsBinaryString(event.target.files[0]);
+                reader.readAsArrayBuffer(event.target.files[0]);
+                reader.onload = ()=>{
+                    let wb = XLSX.read(reader.result, {cellDates: true});
+
+                    console.log(wb);
+
+                    const sheetName = wb.SheetNames[0];
+                    const rawData = wb.Sheets[sheetName];
+
+                    const data = XLSX.utils.sheet_to_json(rawData);
+
+                    console.log(data);
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <table border="1" cellspacing="0" id="TableToExport">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tiger Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <button id="sheetjsexport"><b>Export as XLSX</b></button>
+        <input type="file" id="filereader" onchange="legend(event)">
+    </body>
+
+</html>
